@@ -1,6 +1,8 @@
 % gradient descent training function which returns weights of the neural network
-function [theta1 theta2] = sgd(tvec, tlab, tvecVal, tlabVal, hiddenUnitsCount, c, errorMax, epochMax)
+function [theta1 theta2] = sgd(tvec, tlab, hiddenUnitsCount, c, errorMax, epochMax)
     tvecCount = rows(tvec)
+ 
+    cinit = c;
  
     inUnitsCount = columns(tvec)
     outUnitsCount = 1 %rows(unique(tlab))
@@ -10,7 +12,14 @@ function [theta1 theta2] = sgd(tvec, tlab, tvecVal, tlabVal, hiddenUnitsCount, c
 
     E = zeros(1, epochMax);
 
-    for (epoch=1:epochMax)        
+    for (epoch=1:epochMax)    
+
+        if (epoch < 1000)
+          c = cinit * 10;
+        else
+          c = cinit;
+        endif
+    
         for (i = 1:tvecCount)
 
             % feed forward

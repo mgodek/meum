@@ -1,6 +1,6 @@
 % Author: Michal Godek
 
-function main(loadRstate=1, hiddenUnits=10, c=0.1, errorMax=0.028, epochMax=10000)
+function main(loadRstate=1, hiddenUnits=60, c=0.7, errorMax=0.028, epochMax=10000)
 
     if (loadRstate == 1)
         load( "rnd_state.txt" );
@@ -22,20 +22,21 @@ function main(loadRstate=1, hiddenUnits=10, c=0.1, errorMax=0.028, epochMax=1000
     tstl = b(51:end,1);
 
     tic
-    tvecVal = tstv;
-    tlabVal = tstl;
-    [theta1 theta2] = sgd(tvec, tlab, tvecVal, tlabVal, hiddenUnits, c, errorMax, epochMax);
+    [theta1 theta2] = sgd(tvec, tlab, hiddenUnits, c, errorMax, epochMax);
     toc
     fflush(stdout);
 
     tic
+    e = 0;
     for (i=1:rows(tstv))
         [outLab]= predict(tstv(i,:), theta1, theta2);
         outLab
         tstl(i)
+        e = e + costfunction(outLab, tstl(i));
     end
     toc
 
+    e
     fflush(stdout);
 
 endfunction
