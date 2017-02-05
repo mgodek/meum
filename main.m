@@ -1,19 +1,10 @@
 % Author: Michal Godek
 
-function main(outputFile = "output", loadRstate=1, datasetName = "nn3-001", actFunName = "sigm", windowWidth=7, hiddenUnits=20, hiddenLayers=2, c=0.7, epochMax=3000)
-    
+function main(outputFile = "output", datasetName = "nn3-001", actFunName = "sigm", windowWidth=7, hiddenUnits=20, hiddenLayers=2, c=0.7, epochMax=3000, errorGoal=0.001)
+
     datasetName
     actFunName
     fflush(stdout);
-    if (loadRstate == 1)
-        load( "rnd_state.txt" );
-        rand("state",rstate);
-    else
-        rstate = rand("state");
-        save "rnd_state.txt" rstate
-    endif
-    
-    save outputFile rstate
     
     dataSet = load(datasetName);
     normOfDataSet = norm(dataSet);
@@ -21,7 +12,7 @@ function main(outputFile = "output", loadRstate=1, datasetName = "nn3-001", actF
     a = autoreg_matrix(dataSet, windowWidth)(windowWidth+1:end,:);
     b = [dataSet(windowWidth+1:end,1),a(:,2:end)];
     
-    divPoint = int32(3*rows(b)/4)
+    divPoint = int32(4*rows(b)/5)
     tvec = b(1:divPoint,2:end);
     tlab = b(1:divPoint,1);
     tstv = b(divPoint+1:end,2:end);
@@ -41,7 +32,7 @@ function main(outputFile = "output", loadRstate=1, datasetName = "nn3-001", actF
     endif
     
     tic
-    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax);
+    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax, errorGoal);
     toc
     fflush(stdout);
 
@@ -53,7 +44,7 @@ function main(outputFile = "output", loadRstate=1, datasetName = "nn3-001", actF
         tstl(i);
         thisE = costfunction(outLab, tstl(i));
         e = e + thisE;
-        answers(i,:) = [outLab*normOfDataSet tstl(i)*normOfDataSet thisE];
+        answers(i,:) = [floor(outLab*normOfDataSet) tstl(i)*normOfDataSet thisE];
     end
     toc
 

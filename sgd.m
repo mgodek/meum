@@ -1,5 +1,6 @@
+% Author: Michal Godek
 % gradient descent training function which returns weights of the neural network
-function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax)
+function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal)
     cinit = c;
  
     inUnitsCount = columns(tvec)
@@ -18,11 +19,13 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
     E = zeros(1, epochMax);
 
     for (epoch=1:epochMax)
-        if (epoch < 1000)
-          c = cinit * 15;
-        elseif ( epoch >= 1000 && epoch < 3000 )
-          c = cinit * 7;
-        else
+        if (epoch < 3000)
+          c = cinit * 13;
+        elseif ( epoch >= 3000 && epoch < 6000 )
+          c = cinit * 6;
+        elseif ( epoch >= 6000 && epoch < 8000 )
+          c = cinit * 3;
+        else 
           c = cinit;
         endif
     
@@ -56,9 +59,15 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
             end
         end
 
-        if ( mod(epoch,200) == 0 )
-          printf('Epoch:%d \tc:%f \tCost:%f\n', epoch, c, E(epoch));
+        if ( mod(epoch,500) == 0 )
+          printf('Epoch:%d \tc:%f \tCost:%f\n', epoch, c, E(epoch)./(hiddenUnitsCount*hiddenLayersCount));
           fflush(stdout);
+        endif
+        
+        if ((E(epoch)./(hiddenUnitsCount*hiddenLayersCount)) <= errorGoal )
+          printf('Goal error reachd \n');
+          fflush(stdout);
+          return;
         endif
     end
     printf( "Epoch limit reached \n" );
