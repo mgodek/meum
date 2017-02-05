@@ -5,6 +5,7 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
  
     inUnitsCount = columns(tvec)
     hiddenLayersCount
+    hiddenUnitsCount
     outUnitsCount = 1
     fflush(stdout);
  
@@ -19,13 +20,13 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
     E = zeros(1, epochMax);
 
     for (epoch=1:epochMax)
-        if (epoch < 2000)
-          c = cinit * 13;
+        if (epoch < 1000)
+          c = cinit * 20;
+        elseif ( epoch >= 1000 && epoch < 2000 )
+          c = cinit * 10;
         elseif ( epoch >= 2000 && epoch < 3000 )
-          c = cinit * 6;
+          c = cinit * 5;
         elseif ( epoch >= 3000 && epoch < 4000 )
-          c = cinit * 3;
-        elseif ( epoch >= 4000 && epoch < 5000 )
           c = cinit;
         else
           c = cinit/2;

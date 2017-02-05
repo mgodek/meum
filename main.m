@@ -1,6 +1,6 @@
 % Author: Michal Godek
 
-function main(outputFile = "output", datasetName = "nn3-001", actFunName = "sigm", windowWidth=7, hiddenUnits=20, hiddenLayers=2, c=0.7, epochMax=3000, errorGoal=0.001)
+function e = main(outputFile = "output", datasetName = "nn3-001", actFunName = "sigm", windowWidth=7, hiddenUnits=20, hiddenLayers=2, c=0.7, epochMax=3000, errorGoal=0.001)
 
     datasetName
     actFunName
