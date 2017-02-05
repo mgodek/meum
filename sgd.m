@@ -1,9 +1,7 @@
 % gradient descent training function which returns weights of the neural network
 function [theta1 theta2] = sgd(tvec, tlab, tvecVal, tlabVal, hiddenUnitsCount, c, errorMax, epochMax)
     tvecCount = rows(tvec)
-    cinit = c
-    cinit2 = cinit/2;
-    
+ 
     inUnitsCount = columns(tvec)
     outUnitsCount = 1 %rows(unique(tlab))
  

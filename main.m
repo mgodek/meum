@@ -1,6 +1,6 @@
 % Author: Michal Godek
 
-function main(loadRstate=1, hiddenUnits=20, c=0.05, errorMax=0.028, epochMax=150)
+function main(loadRstate=1, hiddenUnits=10, c=0.1, errorMax=0.028, epochMax=10000)
 
     if (loadRstate == 1)
         load( "rnd_state.txt" );
@@ -11,7 +11,8 @@ function main(loadRstate=1, hiddenUnits=20, c=0.05, errorMax=0.028, epochMax=150
     endif
 
     load "nn3-001"
-    windowWidth = 3;
+    nn3_001 = nn3_001/norm(nn3_001);
+    windowWidth = 7;
     a = autoreg_matrix(nn3_001, windowWidth)(windowWidth+1:end,:);
     b = [nn3_001(windowWidth+1:end,1),a(:,2:end)];
     
@@ -28,21 +29,13 @@ function main(loadRstate=1, hiddenUnits=20, c=0.05, errorMax=0.028, epochMax=150
     fflush(stdout);
 
     tic
-    correct = 0;
     for (i=1:rows(tstv))
-        [outLab a2]= predict(tstv(i,:), theta1, theta2);
-        if ( outLab == tstl(i) )
-            correct++;
-        else
-            #expV = zeros(rows(unique(tstl)),1);
-            #expV(tstl(i)) = 1;
-            #[a2' expV]
-            #[rv ri] = max(a2)
-        endif
+        [outLab]= predict(tstv(i,:), theta1, theta2);
+        outLab
+        tstl(i)
     end
     toc
 
-    printf( "Result %f\n", correct/rows(tstv) );
     fflush(stdout);
 
 endfunction
