@@ -19,7 +19,9 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
 
     for (epoch=1:epochMax)
         if (epoch < 1000)
-          c = cinit * 10;
+          c = cinit * 15;
+        elseif ( epoch >= 1000 && epoch < 3000 )
+          c = cinit * 7;
         else
           c = cinit;
         endif
@@ -55,7 +57,7 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
         end
 
         if ( mod(epoch,200) == 0 )
-          printf('Epoch:%d \tc:%f Cost:%f\n', epoch, c, E(epoch));
+          printf('Epoch:%d \tc:%f \tCost:%f\n', epoch, c, E(epoch));
           fflush(stdout);
         endif
     end

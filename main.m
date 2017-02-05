@@ -1,6 +1,7 @@
 % Author: Michal Godek
 
-function main(loadRstate=1, datasetName = "nn3-001", actFunName = "sigmoid", windowWidth=7, hiddenUnits=20, hiddenLayers=2, c=0.7, epochMax=10000)
+function main(outputFile = "output", loadRstate=1, datasetName = "nn3-001", actFunName = "sigm", windowWidth=7, hiddenUnits=20, hiddenLayers=2, c=0.7, epochMax=3000)
+    
     datasetName
     actFunName
     fflush(stdout);
@@ -12,8 +13,11 @@ function main(loadRstate=1, datasetName = "nn3-001", actFunName = "sigmoid", win
         save "rnd_state.txt" rstate
     endif
     
+    save outputFile rstate
+    
     dataSet = load(datasetName);
-    dataSet = dataSet/norm(dataSet);
+    normOfDataSet = norm(dataSet);
+    dataSet = dataSet/normOfDataSet;
     a = autoreg_matrix(dataSet, windowWidth)(windowWidth+1:end,:);
     b = [dataSet(windowWidth+1:end,1),a(:,2:end)];
     
@@ -43,13 +47,18 @@ function main(loadRstate=1, datasetName = "nn3-001", actFunName = "sigmoid", win
 
     tic
     e = 0;
+    answers = zeros(rows(tstl),3);
     for (i=1:rows(tstv))
-        outLab = predict(actFun, tstv(i,:), theta)
-        tstl(i)
-        e = e + costfunction(outLab, tstl(i));
+        outLab = predict(actFun, tstv(i,:), theta);
+        tstl(i);
+        thisE = costfunction(outLab, tstl(i));
+        e = e + thisE;
+        answers(i,:) = [outLab*normOfDataSet tstl(i)*normOfDataSet thisE];
     end
     toc
 
+    save "-append" outputFile datasetName actFunName windowWidth hiddenUnits hiddenLayers epochMax answers e
+    answers
     e
     fflush(stdout);
 endfunction
