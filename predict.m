@@ -1,5 +1,7 @@
 % preduction function
-function [a2]= predict(tstv, theta1, theta2)
-    a1 = sigmoid(tstv * theta1);
-    a2 = sigmoid(a1 * theta2);
+function [y]= predict(tstv, theta)
+    a = cell(1, rows(theta));
+    a{1} = sigmoid(tstv * theta{1});
+    a{2} = sigmoid(a{1} * theta{2});
+    y = a{end};
 end
