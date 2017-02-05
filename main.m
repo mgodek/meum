@@ -1,7 +1,9 @@
 % Author: Michal Godek
 
-function main(loadRstate=1, windowWidth=7, hiddenUnits=60, hiddenLayers=3, c=0.7, epochMax=1000)
-
+function main(loadRstate=1, datasetName = "nn3-001", actFunName = "sigmoid", windowWidth=7, hiddenUnits=20, hiddenLayers=2, c=0.7, epochMax=10000)
+    datasetName
+    actFunName
+    fflush(stdout);
     if (loadRstate == 1)
         load( "rnd_state.txt" );
         rand("state",rstate);
@@ -9,26 +11,40 @@ function main(loadRstate=1, windowWidth=7, hiddenUnits=60, hiddenLayers=3, c=0.7
         rstate = rand("state");
         save "rnd_state.txt" rstate
     endif
-
-    load "nn3-001"
-    nn3_001 = nn3_001/norm(nn3_001);
-    a = autoreg_matrix(nn3_001, windowWidth)(windowWidth+1:end,:);
-    b = [nn3_001(windowWidth+1:end,1),a(:,2:end)];
     
-    tvec = b(1:50,2:end);
-    tlab = b(1:50,1);
-    tstv = b(51:end,2:end);
-    tstl = b(51:end,1);
+    dataSet = load(datasetName);
+    dataSet = dataSet/norm(dataSet);
+    a = autoreg_matrix(dataSet, windowWidth)(windowWidth+1:end,:);
+    b = [dataSet(windowWidth+1:end,1),a(:,2:end)];
+    
+    divPoint = int32(3*rows(b)/4)
+    tvec = b(1:divPoint,2:end);
+    tlab = b(1:divPoint,1);
+    tstv = b(divPoint+1:end,2:end);
+    tstl = b(divPoint+1:end,1);
 
+    actFun = @sigmoid;
+    actFunGrad = @sigmoidGradient;
+    if ( strcmp("sigm",actFunName) == 1 )
+      actFun = @sigmoid;
+      actFunGrad = @sigmoidGradient;
+    elseif ( strcmp("relu",actFunName) == 1 )
+      actFun = @relu;
+      actFunGrad = @reluGradient;
+    else %if ( strcmp("soft",actFunName) == 1 )
+      actFun = @softplus
+      actFunGrad = @softplusGradient;
+    endif
+    
     tic
-    [theta] = sgd(tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax);
+    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax);
     toc
     fflush(stdout);
 
     tic
     e = 0;
     for (i=1:rows(tstv))
-        outLab = predict(tstv(i,:), theta)
+        outLab = predict(actFun, tstv(i,:), theta)
         tstl(i)
         e = e + costfunction(outLab, tstl(i));
     end
