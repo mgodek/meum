@@ -9,6 +9,7 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
     outUnitsCount = 1
     fflush(stdout);
  
+    % init data structures
     theta = cell(hiddenLayersCount + 1, 1);
     
     theta{1} = ((rand(inUnitsCount, hiddenUnitsCount).*2).-1);
@@ -20,6 +21,7 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
     E = zeros(1, epochMax);
 
     for (epoch=1:epochMax)
+        % adapt learning factor
         if (epoch < 1000)
           c = cinit * 20;
         elseif ( epoch >= 1000 && epoch < 2000 )

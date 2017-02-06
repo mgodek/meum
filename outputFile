@@ -1,4 +1,4 @@
-# Created by Octave 4.0.0, Sun Feb 05 20:34:41 2017 CET <mg88@mg88-Lenovo-IdeaPad-Y580>
+# Created by Octave 4.0.0, Tue Feb 07 00:37:26 2017 CET <mg88@mg88-Lenovo-IdeaPad-Y580>
 # name: rstate
 # type: matrix
 # rows: 625
@@ -628,5 +628,237 @@
  2933358859
  959388669
  223
+
+
+# name: datasetName
+# type: string
+# elements: 1
+# length: 7
+nn3-001
+
+
+# name: actFunName
+# type: string
+# elements: 1
+# length: 4
+sigm
+
+
+# name: windowWidth
+# type: scalar
+5
+
+
+# name: hiddenUnits
+# type: scalar
+20
+
+
+# name: hiddenLayers
+# type: scalar
+1
+
+
+# name: epochMax
+# type: scalar
+5000
+
+
+# name: answers
+# type: matrix
+# rows: 13
+# columns: 3
+ 5970 6080 4.731419114534313e-06
+ 5931 5990 1.360230312384859e-06
+ 6264 6750 9.347204212191795e-05
+ 6064 6769.999999999999 0.0001971337514886403
+ 6159 6320 1.025260029802743e-05
+ 6163 5960 1.641749948556326e-05
+ 6108 6190 2.617532188431427e-06
+ 6184 5250 0.0003458969704381996
+ 6153 5910 2.343795829188464e-05
+ 6152 6430 3.058492433777478e-05
+ 6173 5950 1.972741726407277e-05
+ 6156 5060 0.0004766838580871144
+ 6167 5400 0.0002335228564082763
+
+
+# name: e
+# type: scalar
+0.001455839059836822
+
+
+# name: datasetName
+# type: string
+# elements: 1
+# length: 7
+nn3-001
+
+
+# name: actFunName
+# type: string
+# elements: 1
+# length: 4
+sigm
+
+
+# name: windowWidth
+# type: scalar
+5
+
+
+# name: hiddenUnits
+# type: scalar
+40
+
+
+# name: hiddenLayers
+# type: scalar
+1
+
+
+# name: epochMax
+# type: scalar
+5000
+
+
+# name: answers
+# type: matrix
+# rows: 13
+# columns: 3
+ 5939 6080 7.774731734294231e-06
+ 5920 5990 1.933007977044512e-06
+ 6256 6750 9.655309419360887e-05
+ 6052 6769.999999999999 0.0002039725372840439
+ 6152 6320 1.117053487432033e-05
+ 6146 5960 1.376145153548855e-05
+ 6098 6190 3.308972386456687e-06
+ 6177 5250 0.0003406681702122935
+ 6141 5910 2.117506093346751e-05
+ 6143 6430 3.242849205458021e-05
+ 6163 5950 1.808753831695213e-05
+ 6147 5060 0.0004687327444673242
+ 6160 5400 0.0002291137884043266
+
+
+# name: e
+# type: scalar
+0.001448680124374201
+
+
+# name: datasetName
+# type: string
+# elements: 1
+# length: 7
+nn3-001
+
+
+# name: actFunName
+# type: string
+# elements: 1
+# length: 4
+sigm
+
+
+# name: windowWidth
+# type: scalar
+5
+
+
+# name: hiddenUnits
+# type: scalar
+60
+
+
+# name: hiddenLayers
+# type: scalar
+1
+
+
+# name: epochMax
+# type: scalar
+5000
+
+
+# name: answers
+# type: matrix
+# rows: 13
+# columns: 3
+ 5949 6080 6.730266925583159e-06
+ 5941 5990 9.295507453158711e-07
+ 6266 6750 9.247697509981895e-05
+ 6066 6769.999999999999 0.0001961484542115613
+ 6165 6320 9.404167978513266e-06
+ 6161 5960 1.610126136525383e-05
+ 6114 6190 2.243612787640071e-06
+ 6188 5250 0.0003494328037462762
+ 6155 5910 2.383402525377842e-05
+ 6157 6430 2.943506754050173e-05
+ 6175 5950 2.024183414498982e-05
+ 6160 5060 0.0004799857347064251
+ 6171 5400 0.0002361928149071159
+
+
+# name: e
+# type: scalar
+0.001463156569412773
+
+
+# name: datasetName
+# type: string
+# elements: 1
+# length: 7
+nn3-001
+
+
+# name: actFunName
+# type: string
+# elements: 1
+# length: 4
+sigm
+
+
+# name: windowWidth
+# type: scalar
+5
+
+
+# name: hiddenUnits
+# type: scalar
+20
+
+
+# name: hiddenLayers
+# type: scalar
+2
+
+
+# name: epochMax
+# type: scalar
+5000
+
+
+# name: answers
+# type: matrix
+# rows: 13
+# columns: 3
+ 6045 6080 4.758041323285448e-07
+ 5994 5990 8.781454288473872e-09
+ 6244 6750 0.0001011401260641315
+ 6124 6769.999999999999 0.000164911230318293
+ 6176 6320 8.193603952363958e-06
+ 6177 5960 1.878090601260313e-05
+ 6152 6190 5.548335958327282e-07
+ 6187 5250 0.0003486477613164238
+ 6175 5910 2.794895234714166e-05
+ 6174 6430 2.583516337785189e-05
+ 6182 5950 2.134324921942415e-05
+ 6177 5060 0.000494884114625782
+ 6180 5400 0.0002414614192645285
+
+
+# name: e
+# type: scalar
+0.001454185945680993
 
 
