@@ -22,13 +22,13 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
 
     for (epoch=1:epochMax)
         % adapt learning factor
-        if (epoch < 1000)
+        if (epoch < epochMax*0.2)
           c = cinit * 20;
-        elseif ( epoch >= 1000 && epoch < 2000 )
+        elseif ( epoch >= epochMax*0.2 && epoch < 2*epochMax*0.2 )
           c = cinit * 10;
-        elseif ( epoch >= 2000 && epoch < 3000 )
+        elseif ( epoch >= 2*epochMax*0.2 && epoch < 3*epochMax*0.2 )
           c = cinit * 5;
-        elseif ( epoch >= 3000 && epoch < 4000 )
+        elseif ( epoch >= 3*epochMax*0.2 && epoch < 4*epochMax*0.2 )
           c = cinit;
         else
           c = cinit/2;

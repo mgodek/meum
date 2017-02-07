@@ -54,10 +54,11 @@ function [answers,e] = main(outputFile = "output", datasetName = "nn3-001", actF
         tstl(i);
         thisE = costfunction(outLab, tstl(i));
         e = e + thisE;
-        answers(i,:) = [floor(outLab*normOfDataSet) tstl(i)*normOfDataSet thisE];
+        answers(i,:) = [floor(outLab*normOfDataSet) tstl(i)*normOfDataSet thisE*normOfDataSet];
     end
     toc
 
+    e = e * normOfDataSet;
     save "-append" outputFile datasetName actFunName windowWidth hiddenUnits hiddenLayers epochMax answers e
     answers
     e
