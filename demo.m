@@ -5,9 +5,9 @@ function demo(loadRstate=1)
     datasetNames = ["nn3-001";"nn3-085"]
     activationFunctions = ["sigm";"relu"]
     
-    epochMax=5000
+    epochMax=2000
     c=0.8
-    errorGoal = 0.00005
+    errorGoal = 90
     
 %    PCF
 %    pkg load tsa
@@ -50,6 +50,7 @@ function demo(loadRstate=1)
             windowWidth = 5;
             for ( hiddenLayers=1:2 )
               for ( hiddenUnits=20:20:60 )
+                 printf( "=====================================================================================\n\n" );
                 [answers, testSetError] = main("output", datasetNames(dataSetIdx,:), activationFunctions(actFunIdx,:), windowWidth, hiddenUnits, hiddenLayers, c, epochMax, errorGoal);
                 if ( testSetError < bestParams(dataSetIdx, 1) )
                   printf("New best %f\n", testSetError)
@@ -59,7 +60,7 @@ function demo(loadRstate=1)
                   bestParams(dataSetIdx, 4) = hiddenLayers;
                   bestParams(dataSetIdx, 5) = actFunIdx;
                   bestParams
-                  save "-append" bestParams
+                  save "-append" outputFile bestParams
                   fflush(stdout);
                 endif
               end
@@ -71,12 +72,17 @@ function demo(loadRstate=1)
     bestParams
 
     % execute with best params
+    answers = cell(rows(datasetNames), 1);
     for ( dataSetIdx = 1:rows(datasetNames) )
-      [answers, e] = main("output", datasetNames(dataSetIdx,:), activationFunctions(bestParams(dataSetIdx, 5),:), bestParams(dataSetIdx, 2), bestParams(dataSetIdx, 3), bestParams(dataSetIdx, 4), c, epochMax, errorGoal);
-      dataSet = load( datasetNames(dataSetIdx,:));
+      [answerVec, e] = main("output", datasetNames(dataSetIdx,:), activationFunctions(bestParams(dataSetIdx, 5),:), bestParams(dataSetIdx, 2), bestParams(dataSetIdx, 3), bestParams(dataSetIdx, 4), c, epochMax, errorGoal);
+      answers{dataSetIdx} = answerVec;
+    end
+    
+    for ( dataSetIdx = 1:rows(datasetNames) )
+      dataSet = load(datasetNames(dataSetIdx,:));
       hold all
       plot(dataSet);
-      plot([dataSet(1:end-rows(answers),:);answers(:,1)]);
+      plot([dataSet(1:end-rows(answers{dataSetIdx}),1);answers{dataSetIdx}(:,1)]);
       input('press return to continue');
       hold off
       close all

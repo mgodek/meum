@@ -1,6 +1,6 @@
 % Author: Michal Godek
 
-function [answers,e] = main(outputFile = "output", datasetName = "nn3-001", actFunName = "sigm", windowWidth=5, hiddenUnits=20, hiddenLayers=2, c=0.8, epochMax=5000, errorGoal=0.00005)
+function [answer e] = main(outputFile = "output", datasetName = "nn3-001", actFunName = "sigm", windowWidth=5, hiddenUnits=20, hiddenLayers=2, c=0.8, epochMax=5000, errorGoal=0.00005)
 
     datasetName
     actFunName
@@ -19,8 +19,8 @@ function [answers,e] = main(outputFile = "output", datasetName = "nn3-001", actF
     divPoint = int32(4*rows(b)/5)
     tvec = b(1:divPoint,2:end);
     tlab = b(1:divPoint,1);
-    tstv = b(divPoint+1:end,2:end);
-    tstl = b(divPoint+1:end,1);
+    tstv = b(divPoint+1-windowWidth:end,2:end);
+    tstl = b(divPoint+1-windowWidth:end,1);
 
     % pick activation function
     actFun = @sigmoid;
@@ -38,29 +38,16 @@ function [answers,e] = main(outputFile = "output", datasetName = "nn3-001", actF
     
     % stochastic gradient descent
     tic
-    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax, errorGoal);
+    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax, errorGoal, tstv, tstl, normOfDataSet);
     toc
     fflush(stdout);
 
     % check on test set the predictor
-    tic
-    e = 0;
-    answers = zeros(rows(tstl),3);
-    projectedVector = zeros(rows(tstv)+1,columns(tstv));
-    projectedVector(1,:) = tstv(1,:);
-    for (i=1:rows(tstv))
-        outLab = predict(actFun, projectedVector(i,:), theta);
-        projectedVector(i+1,:) = [outLab projectedVector(i,1:end-1)];
-        tstl(i);
-        thisE = costfunction(outLab, tstl(i));
-        e = e + thisE;
-        answers(i,:) = [floor(outLab*normOfDataSet) tstl(i)*normOfDataSet thisE*normOfDataSet];
-    end
-    toc
+    [answer e] = evaluate(tstv, tstl, actFun, theta, normOfDataSet);
 
-    e = e * normOfDataSet;
-    save "-append" outputFile datasetName actFunName windowWidth hiddenUnits hiddenLayers epochMax answers e
-    answers
+    e = e ./(hiddenUnits*hiddenLayers);
+    save "-append" outputFile datasetName actFunName windowWidth hiddenUnits hiddenLayers epochMax answer e
+    answer
     e
     fflush(stdout);
 endfunction

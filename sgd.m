@@ -1,6 +1,6 @@
 % Author: Michal Godek
 % gradient descent training function which returns weights of the neural network
-function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal)
+function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal, tstv, tstl, normOfDataSet)
     cinit = c;
  
     inUnitsCount = columns(tvec)
@@ -18,16 +18,16 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
     end
     theta{end} = ((rand(hiddenUnitsCount, outUnitsCount).*2).-1);
 
-    E = zeros(1, epochMax);
+    %E = zeros(1, epochMax);
 
     for (epoch=1:epochMax)
         % adapt learning factor
         if (epoch < epochMax*0.2)
-          c = cinit * 20;
-        elseif ( epoch >= epochMax*0.2 && epoch < 2*epochMax*0.2 )
           c = cinit * 10;
-        elseif ( epoch >= 2*epochMax*0.2 && epoch < 3*epochMax*0.2 )
+        elseif ( epoch >= epochMax*0.2 && epoch < 2*epochMax*0.2 )
           c = cinit * 5;
+        elseif ( epoch >= 2*epochMax*0.2 && epoch < 3*epochMax*0.2 )
+          c = cinit * 2;
         elseif ( epoch >= 3*epochMax*0.2 && epoch < 4*epochMax*0.2 )
           c = cinit;
         else
@@ -49,8 +49,8 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
             outE = tlab(i);
             
             % accumulate cost
-            e = costfunction(outE, a{end});
-            E(epoch) += e;
+            %e = costfunction(outE, a{end});
+            %E(epoch) += e;
 
             % back propagate the error
             delta = cell(hiddenLayersCount + 2, 1);
@@ -63,14 +63,16 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
               theta{i} = theta{i} + (c * delta{i+1} * a{i})';
             end
         end
-
-        if ( mod(epoch,500) == 0 )
-          printf('Epoch:%d \tc:%f \tCost:%f\n', epoch, c, E(epoch)./(hiddenUnitsCount*hiddenLayersCount));
+        
+        [answer evalErr] = evaluate(tstv, tstl, actFun, theta, normOfDataSet);
+        
+        if ( mod(epoch,epochMax*0.1) == 0 )
+          printf('Epoch:%d \tc:%f \tCost:%f\n', epoch, c, evalErr);
           fflush(stdout);
         endif
         
-        if ((E(epoch)./(hiddenUnitsCount*hiddenLayersCount)) <= errorGoal )
-          printf('Goal error reachd \n');
+        if (evalErr <= errorGoal)
+          printf('Goal error reached %f\n', evalErr);
           fflush(stdout);
           return;
         endif
