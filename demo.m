@@ -5,9 +5,9 @@ function demo(loadRstate=1)
     tic
     datasetNames = ["nn3-001";"nn3-085"]
     datasetErrorGoal = [1000;1000]
-    datasetWindowWidth = [30;30]
-    activationFunctions = ["sigm";"tanh"]
-    
+    datasetWindowWidth = [30;40]
+    activationFunctions = ["sigm";"relu"]
+    biasInput = 1;
     epochMax=1000
     c=0.09
     
@@ -49,7 +49,7 @@ function demo(loadRstate=1)
           for ( hiddenUnits=20:20:60 )
             printf( "%s\n\n", strBreak );
             save "-append" outputFile strBreak
-            [answers, testSetError] = main("output", datasetNames(dataSetIdx,:), activationFunctions(actFunIdx,:), datasetWindowWidth(dataSetIdx), hiddenUnits, hiddenLayers, c, epochMax, datasetErrorGoal(dataSetIdx));
+            [answers, testSetError] = main("output", datasetNames(dataSetIdx,:), activationFunctions(actFunIdx,:), datasetWindowWidth(dataSetIdx), hiddenUnits, hiddenLayers, c, epochMax, datasetErrorGoal(dataSetIdx), biasInput);
             if ( testSetError < bestParams(dataSetIdx, 1) )
               printf( "%s\n", strBreak );
               printf("New best %f\n", testSetError)
@@ -74,7 +74,7 @@ function demo(loadRstate=1)
     % execute with best params
     answers = cell(rows(datasetNames), 1);
     for ( dataSetIdx = 1:rows(datasetNames) )
-      [answerVec e] = main("output", datasetNames(dataSetIdx,:), activationFunctions(bestParams(dataSetIdx, 5),:), bestParams(dataSetIdx, 2), bestParams(dataSetIdx, 3), bestParams(dataSetIdx, 4), c, epochMax, datasetErrorGoal(dataSetIdx));
+      [answerVec e] = main("output", datasetNames(dataSetIdx,:), activationFunctions(bestParams(dataSetIdx, 5),:), bestParams(dataSetIdx, 2), bestParams(dataSetIdx, 3), bestParams(dataSetIdx, 4), c, epochMax, datasetErrorGoal(dataSetIdx), biasInput);
       answers{dataSetIdx} = answerVec;
     end
     

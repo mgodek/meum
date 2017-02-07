@@ -1,15 +1,15 @@
 % Author: Michal Godek
 % gradient descent training function which returns weights of the neural network
-function [bestTheta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal, tstv, tstl, normOfDataSet, mu)
+function [bestTheta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal, tstv, tstl, normOfDataSet, mu, biasInput)
     cinit = c;
  
-    inUnitsCount = columns(tvec)
+    inUnitsCount = columns(tvec) + 1 % 1 for bias
     hiddenLayersCount
-    hiddenUnitsCount
+    hiddenUnitsCount = hiddenUnitsCount + 1 % 1 for bias
     outUnitsCount = 1
     fflush(stdout);
  
-    errorMin = 10000000000;
+    errorMin = 999999999999999999999999999999999999999999999999999999999999;
  
     % init data structures
     theta = cell(hiddenLayersCount + 1, 1);
@@ -44,7 +44,7 @@ function [bestTheta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hid
             % feed forward
             a = cell(hiddenLayersCount + 2, 1);
             z = cell(hiddenLayersCount + 2, 1);
-            a{1} = tvec(i,:);
+            a{1} = [tvec(i,:) biasInput];
             for (j = 2:hiddenLayersCount+2)
               z{j-1} = a{j-1} * theta{j-1};
               a{j} = actFun(z{j-1});
@@ -62,7 +62,7 @@ function [bestTheta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hid
             end
         end
         
-        [answer evalErr] = evaluate(tstv, tstl, actFun, theta, normOfDataSet, mu);
+        [answer evalErr] = evaluate([tstv ones(rows(tstv),1).*biasInput], tstl, actFun, theta, normOfDataSet, mu);
         if ( evalErr < errorMin )
           errorMin = evalErr;
           bestTheta = theta;

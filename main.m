@@ -1,6 +1,6 @@
 % Author: Michal Godek
 
-function [answer e] = main(outputFile = "output", datasetName = "nn3-001", actFunName = "sigm", windowWidth=5, hiddenUnits=20, hiddenLayers=2, c=0.8, epochMax=5000, errorGoal=0.00005)
+function [answer e] = main(outputFile = "output", datasetName = "nn3-001", actFunName = "sigm", windowWidth=5, hiddenUnits=20, hiddenLayers=2, c=0.8, epochMax=5000, errorGoal=0.00005, biasInput = 1)
 
     datasetName
     actFunName
@@ -40,12 +40,12 @@ function [answer e] = main(outputFile = "output", datasetName = "nn3-001", actFu
     
     % stochastic gradient descent
     tic
-    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax, errorGoal, tstv, tstl, normOfDataSet,mu);
+    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax, errorGoal, tstv, tstl, normOfDataSet, mu, biasInput);
     toc
     fflush(stdout);
 
     % check on test set the predictor
-    [answer e] = evaluate(tstv, tstl, actFun, theta, normOfDataSet, mu);
+    [answer e] = evaluate([tstv ones(rows(tstv).*biasInput,1)], tstl, actFun, theta, normOfDataSet, mu);
 
     save "-append" outputFile datasetName actFunName windowWidth hiddenUnits hiddenLayers epochMax answer e
     answer
