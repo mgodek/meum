@@ -1,4 +1,4 @@
 % activation function
-function z = softplus(t)
+function z = tanhActivation(t)
     z = tanh(t);
 end

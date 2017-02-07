@@ -1,4 +1,4 @@
-% gradient of softplus function
-function z = softplusGradient(t)
+% gradient of tanh function
+function z = tanhGradient(t)
     z = 1 - tanh(t) .* tanh(t);
 end

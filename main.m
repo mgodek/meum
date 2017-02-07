@@ -32,7 +32,7 @@ function [answers,e] = main(outputFile = "output", datasetName = "nn3-001", actF
       actFun = @relu;
       actFunGrad = @reluGradient;
     elseif ( strcmp("tanh",actFunName) == 1 )
-      actFun = @tanh
+      actFun = @tanhActivation
       actFunGrad = @tanhGradient;
     endif
     
