@@ -3,7 +3,7 @@
 function demo(loadRstate=1)
     tic
     datasetNames = ["nn3-001";"nn3-085"]
-    activationFunctions = ["sigm";"soft"]
+    activationFunctions = ["sigm";"tanh"]
     
     epochMax=5000
     c=0.8

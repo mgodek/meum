@@ -1,4 +1,4 @@
 % gradient of softplus function
 function z = softplusGradient(t)
-    z = (e.^t)/(e.^t+1);
+    z = 1 - tanh(t) .* tanh(t);
 end

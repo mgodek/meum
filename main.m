@@ -31,9 +31,9 @@ function [answers,e] = main(outputFile = "output", datasetName = "nn3-001", actF
     elseif ( strcmp("relu",actFunName) == 1 )
       actFun = @relu;
       actFunGrad = @reluGradient;
-    else %if ( strcmp("soft",actFunName) == 1 )
-      actFun = @softplus
-      actFunGrad = @softplusGradient;
+    elseif ( strcmp("tanh",actFunName) == 1 )
+      actFun = @tanh
+      actFunGrad = @tanhGradient;
     endif
     
     % stochastic gradient descent
