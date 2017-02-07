@@ -1,6 +1,6 @@
 % Author: Michal Godek
 % gradient descent training function which returns weights of the neural network
-function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal, tstv, tstl, normOfDataSet)
+function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal, tstv, tstl, normOfDataSet, mu)
     cinit = c;
  
     inUnitsCount = columns(tvec)
@@ -11,6 +11,9 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
  
     % init data structures
     theta = cell(hiddenLayersCount + 1, 1);
+    
+    load( "rnd_state.txt" );
+    rand("state",rstate);
     
     theta{1} = ((rand(inUnitsCount, hiddenUnitsCount).*2).-1);
     for (i = 2:hiddenLayersCount)
@@ -23,15 +26,15 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
     for (epoch=1:epochMax)
         % adapt learning factor
         if (epoch < epochMax*0.2)
-          c = cinit * 10;
-        elseif ( epoch >= epochMax*0.2 && epoch < 2*epochMax*0.2 )
           c = cinit * 5;
-        elseif ( epoch >= 2*epochMax*0.2 && epoch < 3*epochMax*0.2 )
+        elseif ( epoch >= epochMax*0.2 && epoch < 2*epochMax*0.2 )
           c = cinit * 2;
-        elseif ( epoch >= 3*epochMax*0.2 && epoch < 4*epochMax*0.2 )
+        elseif ( epoch >= 2*epochMax*0.2 && epoch < 3*epochMax*0.2 )
           c = cinit;
-        else
+        elseif ( epoch >= 3*epochMax*0.2 && epoch < 4*epochMax*0.2 )
           c = cinit/2;
+        else
+          c = cinit/4;
         endif
     
         for (i = 1:rows(tvec))
@@ -64,7 +67,7 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
             end
         end
         
-        [answer evalErr] = evaluate(tstv, tstl, actFun, theta, normOfDataSet);
+        [answer evalErr] = evaluate(tstv, tstl, actFun, theta, normOfDataSet, mu);
         
         if ( mod(epoch,epochMax*0.1) == 0 )
           printf('Epoch:%d \tc:%f \tCost:%f\n', epoch, c, evalErr);

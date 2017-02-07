@@ -1,6 +1,6 @@
 % Author: Michal Godek
 
-function [answer e] = evaluate(tstv, tstl, actFun, theta, normOfDataSet)
+function [answer e] = evaluate(tstv, tstl, actFun, theta, normOfDataSet, mu)
     % check on test set the predictor
     e = 0;
     answer = zeros(rows(tstl),3);
@@ -12,6 +12,6 @@ function [answer e] = evaluate(tstv, tstl, actFun, theta, normOfDataSet)
         tstl(i);
         thisE = costfunction(outLab, tstl(i));
         e = e + thisE*normOfDataSet;
-        answer(i,:) = [floor(outLab*normOfDataSet) tstl(i)*normOfDataSet thisE*normOfDataSet];
+        answer(i,:) = [int32(outLab*normOfDataSet+mu) tstl(i)*normOfDataSet+mu thisE*normOfDataSet];
     end
 endfunction

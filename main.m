@@ -8,6 +8,8 @@ function [answer e] = main(outputFile = "output", datasetName = "nn3-001", actFu
     
     % load and normalize data for the MLP
     dataSet = load(datasetName);
+    mu = mean(dataSet);
+    dataSet = dataSet .- mu;
     normOfDataSet = norm(dataSet);
     dataSet = dataSet/normOfDataSet;
     
@@ -38,14 +40,13 @@ function [answer e] = main(outputFile = "output", datasetName = "nn3-001", actFu
     
     % stochastic gradient descent
     tic
-    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax, errorGoal, tstv, tstl, normOfDataSet);
+    [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnits, hiddenLayers, c, epochMax, errorGoal, tstv, tstl, normOfDataSet,mu);
     toc
     fflush(stdout);
 
     % check on test set the predictor
-    [answer e] = evaluate(tstv, tstl, actFun, theta, normOfDataSet);
+    [answer e] = evaluate(tstv, tstl, actFun, theta, normOfDataSet, mu);
 
-    e = e ./(hiddenUnits*hiddenLayers);
     save "-append" outputFile datasetName actFunName windowWidth hiddenUnits hiddenLayers epochMax answer e
     answer
     e

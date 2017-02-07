@@ -5,7 +5,7 @@ function demo(loadRstate=1)
     datasetNames = ["nn3-001";"nn3-085"]
     activationFunctions = ["sigm";"relu"]
     
-    epochMax=2000
+    epochMax=1000
     c=0.8
     errorGoal = 90
     
@@ -47,9 +47,9 @@ function demo(loadRstate=1)
     for ( dataSetIdx = 1:rows(datasetNames) )
       for ( actFunIdx = 1:rows(activationFunctions) )
           %for ( windowWidth=10:3:16)
-            windowWidth = 5;
+            windowWidth = 10;
             for ( hiddenLayers=1:2 )
-              for ( hiddenUnits=20:20:60 )
+              for ( hiddenUnits=40:20:80 )
                  printf( "=====================================================================================\n\n" );
                 [answers, testSetError] = main("output", datasetNames(dataSetIdx,:), activationFunctions(actFunIdx,:), windowWidth, hiddenUnits, hiddenLayers, c, epochMax, errorGoal);
                 if ( testSetError < bestParams(dataSetIdx, 1) )
@@ -74,7 +74,7 @@ function demo(loadRstate=1)
     % execute with best params
     answers = cell(rows(datasetNames), 1);
     for ( dataSetIdx = 1:rows(datasetNames) )
-      [answerVec, e] = main("output", datasetNames(dataSetIdx,:), activationFunctions(bestParams(dataSetIdx, 5),:), bestParams(dataSetIdx, 2), bestParams(dataSetIdx, 3), bestParams(dataSetIdx, 4), c, epochMax, errorGoal);
+      [answerVec e] = main("output", datasetNames(dataSetIdx,:), activationFunctions(bestParams(dataSetIdx, 5),:), bestParams(dataSetIdx, 2), bestParams(dataSetIdx, 3), bestParams(dataSetIdx, 4), c, epochMax, errorGoal);
       answers{dataSetIdx} = answerVec;
     end
     
