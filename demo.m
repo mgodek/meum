@@ -1,13 +1,15 @@
 % Author: Michal Godek
 
 function demo(loadRstate=1)
+    strBreak = "==========================================================================";
     tic
     datasetNames = ["nn3-001";"nn3-085"]
-    activationFunctions = ["sigm";"relu"]
+    datasetErrorGoal = [1150;1000]
+    datasetWindowWidth = [30;30]
+    activationFunctions = ["sigm";"tanh"]
     
     epochMax=1000
-    c=0.8
-    errorGoal = 90
+    c=0.09
     
 %    PCF
 %    pkg load tsa
@@ -30,10 +32,7 @@ function demo(loadRstate=1)
 %      close all
 %    end
 
-    if (loadRstate == 1)
-        load( "rnd_state.txt" );
-        rand("state",rstate);
-    else
+    if (loadRstate == 0)
         rstate = rand("state");
         save "rnd_state.txt" rstate
     endif
@@ -41,40 +40,41 @@ function demo(loadRstate=1)
     save outputFile rstate
 
     % rows: "dataset" columns "error", "windowWidth", "hiddenUnits", "hiddenLayers", "activationFunction"
-    bestParams = ones(rows(datasetNames), 5).*100;
+    bestParams = ones(rows(datasetNames), 5).*100000;
     
     % param tuning
     for ( dataSetIdx = 1:rows(datasetNames) )
       for ( actFunIdx = 1:rows(activationFunctions) )
-          %for ( windowWidth=10:3:16)
-            windowWidth = 10;
-            for ( hiddenLayers=1:2 )
-              for ( hiddenUnits=40:20:80 )
-                 printf( "=====================================================================================\n\n" );
-                [answers, testSetError] = main("output", datasetNames(dataSetIdx,:), activationFunctions(actFunIdx,:), windowWidth, hiddenUnits, hiddenLayers, c, epochMax, errorGoal);
-                if ( testSetError < bestParams(dataSetIdx, 1) )
-                  printf("New best %f\n", testSetError)
-                  bestParams(dataSetIdx, 1) = testSetError;
-                  bestParams(dataSetIdx, 2) = windowWidth;
-                  bestParams(dataSetIdx, 3) = hiddenUnits;
-                  bestParams(dataSetIdx, 4) = hiddenLayers;
-                  bestParams(dataSetIdx, 5) = actFunIdx;
-                  bestParams
-                  save "-append" outputFile bestParams
-                  fflush(stdout);
-                endif
-              end
-            %end
+        for ( hiddenLayers=1:2 )
+          for ( hiddenUnits=20:20:60 )
+            printf( "%s\n\n", strBreak );
+            save "-append" outputFile strBreak
+            [answers, testSetError] = main("output", datasetNames(dataSetIdx,:), activationFunctions(actFunIdx,:), datasetWindowWidth(dataSetIdx), hiddenUnits, hiddenLayers, c, epochMax, datasetErrorGoal(dataSetIdx));
+            if ( testSetError < bestParams(dataSetIdx, 1) )
+              printf( "%s\n", strBreak );
+              printf("New best %f\n", testSetError)
+              bestParams(dataSetIdx, 1) = testSetError;
+              bestParams(dataSetIdx, 2) = datasetWindowWidth(dataSetIdx);
+              bestParams(dataSetIdx, 3) = hiddenUnits;
+              bestParams(dataSetIdx, 4) = hiddenLayers;
+              bestParams(dataSetIdx, 5) = actFunIdx;
+              bestParams
+              printf( "\n%s\n", strBreak );
+              save "-append" outputFile bestParams
+              fflush(stdout);
+            endif
+          end
           end
       end
     end
 
     bestParams
 
+    printf( "%s\n execute with best params\n", strBreak );
     % execute with best params
     answers = cell(rows(datasetNames), 1);
     for ( dataSetIdx = 1:rows(datasetNames) )
-      [answerVec e] = main("output", datasetNames(dataSetIdx,:), activationFunctions(bestParams(dataSetIdx, 5),:), bestParams(dataSetIdx, 2), bestParams(dataSetIdx, 3), bestParams(dataSetIdx, 4), c, epochMax, errorGoal);
+      [answerVec e] = main("output", datasetNames(dataSetIdx,:), activationFunctions(bestParams(dataSetIdx, 5),:), bestParams(dataSetIdx, 2), bestParams(dataSetIdx, 3), bestParams(dataSetIdx, 4), c, epochMax, datasetErrorGoal(dataSetIdx));
       answers{dataSetIdx} = answerVec;
     end
     
