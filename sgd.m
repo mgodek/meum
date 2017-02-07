@@ -1,6 +1,6 @@
 % Author: Michal Godek
 % gradient descent training function which returns weights of the neural network
-function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal, tstv, tstl, normOfDataSet, mu)
+function [bestTheta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenLayersCount, c, epochMax, errorGoal, tstv, tstl, normOfDataSet, mu)
     cinit = c;
  
     inUnitsCount = columns(tvec)
@@ -9,8 +9,11 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
     outUnitsCount = 1
     fflush(stdout);
  
+    errorMin = 10000000000;
+ 
     % init data structures
     theta = cell(hiddenLayersCount + 1, 1);
+    bestTheta = theta;
     
     load( "rnd_state.txt" );
     rand("state",rstate);
@@ -60,6 +63,10 @@ function [theta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hiddenL
         end
         
         [answer evalErr] = evaluate(tstv, tstl, actFun, theta, normOfDataSet, mu);
+        if ( evalErr < errorMin )
+          errorMin = evalErr;
+          bestTheta = theta;
+        endif
         
         if ( mod(epoch,epochMax*0.01) == 0 )
           printf('Epoch:%d \tc:%f \tCost:%f\n', epoch, c, evalErr);

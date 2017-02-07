@@ -4,7 +4,7 @@ function demo(loadRstate=1)
     strBreak = "==========================================================================";
     tic
     datasetNames = ["nn3-001";"nn3-085"]
-    datasetErrorGoal = [1150;1000]
+    datasetErrorGoal = [1000;1000]
     datasetWindowWidth = [30;30]
     activationFunctions = ["sigm";"tanh"]
     
