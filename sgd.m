@@ -68,7 +68,7 @@ function [bestTheta] = sgd(actFun, actFunGrad, tvec, tlab, hiddenUnitsCount, hid
           bestTheta = theta;
         endif
         
-        if ( mod(epoch,epochMax*0.01) == 0 )
+        if ( mod(epoch,epochMax*0.05) == 0 )
           printf('Epoch:%d \tc:%f \tCost:%f\n', epoch, c, evalErr);
           fflush(stdout);
         endif

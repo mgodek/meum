@@ -18,7 +18,7 @@ function [answer e] = main(outputFile = "output", datasetName = "nn3-001", actFu
     b = [dataSet(windowWidth+1:end,1),a(:,2:end)];
     
     % divide data to train and test set
-    divPoint = int32(5*rows(b)/6)
+    divPoint = int32(9*rows(b)/10)
     tvec = b(1:divPoint,2:end);
     tlab = b(1:divPoint,1);
     tstv = b(divPoint+1-windowWidth:end,2:end);

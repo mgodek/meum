@@ -3,9 +3,9 @@
 function demo(loadRstate=1)
     strBreak = "==========================================================================";
     tic
-    datasetNames = ["nn3-001";"nn3-085"]
+    datasetNames = ["nn3-001"] %;"nn3-002"]
     datasetErrorGoal = [1000;1000]
-    datasetWindowWidth = [30;40]
+    datasetWindowWidth = [30;30]
     activationFunctions = ["sigm";"relu"]
     biasInput = 1;
     epochMax=1000
@@ -40,13 +40,13 @@ function demo(loadRstate=1)
     save outputFile rstate
 
     % rows: "dataset" columns "error", "windowWidth", "hiddenUnits", "hiddenLayers", "activationFunction"
-    bestParams = ones(rows(datasetNames), 5).*100000;
+    bestParams = ones(rows(datasetNames), 5).*1000000000;
     
     % param tuning
     for ( dataSetIdx = 1:rows(datasetNames) )
       for ( actFunIdx = 1:rows(activationFunctions) )
-        for ( hiddenLayers=1:2 )
-          for ( hiddenUnits=20:20:60 )
+        for ( hiddenLayers=1:3 )
+          for ( hiddenUnits=10:10:80 )
             printf( "%s\n\n", strBreak );
             save "-append" outputFile strBreak
             [answers, testSetError] = main("output", datasetNames(dataSetIdx,:), activationFunctions(actFunIdx,:), datasetWindowWidth(dataSetIdx), hiddenUnits, hiddenLayers, c, epochMax, datasetErrorGoal(dataSetIdx), biasInput);
